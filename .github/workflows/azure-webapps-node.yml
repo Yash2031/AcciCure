@@ -1,0 +1,117 @@
+# This workflow will build and push a node.js application to an Azure Web App when a commit is pushed to your default branch.
+#
+# This workflow assumes you have already created the target Azure App Service web app.
+# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-nodejs?tabs=linux&pivots=development-environment-cli
+#
+# To configure this workflow:
+#
+# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
+#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
+#
+# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
+#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
+#
+# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE_PATH and NODE_VERSION environment variables below.
+#
+# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
+# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
+
+
+const handleSearch = async () => {
+    const response = await fetch(`https://www.searchapi.io/api/v1/search?api_key=nQzjFLXz9hzCh3ohhhP3H4XZ`);
+    const data = await response.json();
+    setSearchResults(data.results);
+  };
+
+  
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
+import * as Sensors from 'expo-sensors';
+
+const AcciCure = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [emergencyContactName, setEmergencyContactName] = useState('');
+  const [emergencyContactNumber, setEmergencyContactNumber] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleLogin = () => {
+    // TODO: Implement login logic
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+  };
+
+  const handleSaveEmergencyContact = () => {
+    // TODO: Save emergency contact to database
+    Alert.alert('Emergency contact saved');
+  };
+
+  const handleSearch = () => {
+    // TODO: Implement search logic
+    setSearchResults(['Result 1', 'Result 2', 'Result 3']);
+  };
+
+  Sensors.Accelerometer.addListener(accelerometerData => {
+    // TODO: Implement crash detection logic
+    if (accelerometerData.x > 10 || accelerometerData.y > 10 || accelerometerData.z > 10) {
+      Alert.alert('Crash detected');
+    }
+  });
+
+  if (!loggedIn) {
+    return (
+      <View>
+        <Text>AcciCure</Text>
+        <TextInput
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <Button title="Login" onPress={handleLogin} />
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <Text>AcciCure</Text>
+      <Button title="Logout" onPress={handleLogout} />
+      <Text>Emergency Contact</Text>
+      <TextInput
+        placeholder="Name"
+        value={emergencyContactName}
+        onChangeText={setEmergencyContactName}
+      />
+      <TextInput
+        placeholder="Phone Number"
+        value={emergencyContactNumber}
+        onChangeText={setEmergencyContactNumber}
+      />
+      <Button title="Save" onPress={handleSaveEmergencyContact} />
+      <Text>Quick Remedies</Text>
+      <TextInput
+        placeholder="Search"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+      <Button title="Search" onPress={handleSearch} />
+      {searchResults.map(result => (
+        <Text key={result}>{result}</Text>
+      ))}
+    </View>
+  );
+};
+
+export default AcciCure;
